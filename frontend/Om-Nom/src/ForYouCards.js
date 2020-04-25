@@ -4,8 +4,6 @@ import { Avatar, Card, CardHeader, CardContent, CardActions, CardMedia, IconButt
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Grid from '@material-ui/core/Grid';
 
-import pizza from './img/cauliflower-pizza.jpg'; 
-
 const ForYouCards  = props => {
     const { avatarUrl, title, username, date, likes, imageUrl } = props;
     return(
@@ -32,8 +30,6 @@ const ForYouCards  = props => {
                 </CardActions>
             </Grid>
         </Grid>
-      
-      
       
     </Card>
     );
