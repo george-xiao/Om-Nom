@@ -1,12 +1,23 @@
 import React from 'react';
  
-const profile = () => {
-    return (
-       <div>
-          <h1>profile</h1>
-           <p>profile page body content</p>
-       </div>
-    );
+
+class Profile extends React.Component {
+    constructor() {
+      super();
+      this.state = {
+        loading: false
+      };
+    }
+
+    render(){
+        return (
+            <div>
+               <h1>Profile</h1>
+                <p>Profile page body content</p>
+            </div>
+         );
+    }
+
 }
- 
-export default profile;
+
+export default Profile;
