@@ -2,7 +2,7 @@
 // function that takes in a map  of [[tag,number of times liked]]
 // and outputs top n tags
 // assumes tagMap is already sorted
-function getTopNTags(n, tagMap){
+exports.getTopNTags = function(n, tagMap){
     // where n is the number of tags to get
     let keys = [];
     if (tagMap.length < n){

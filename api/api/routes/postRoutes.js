@@ -14,7 +14,7 @@ module.exports = function(app) {
 
     app.route('/users/:userId/posts/recommended')
         // get recommended posts based on tags
-        .get(post.getRecommendedPosts);
+        .get(post.getRecommendedPostsForUser);
 
     app.route('/users/posts/trending/:pageNum')
         // get trending posts (most liked posts last 24 hours)
