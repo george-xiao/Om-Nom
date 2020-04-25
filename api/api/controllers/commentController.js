@@ -1,17 +1,11 @@
 'use strict';
 // var cloneDeep = require('lodash.clonedeep');
+var commentHelper = require('../helpers/commentHelper');
 
 var mongoose = require('mongoose'),
     Post = mongoose.model('Posts'),
     Comment = mongoose.model('Comments'),
     User = mongoose.model('Users');
-
-async function getUsernameForComment(userId){
-    User.findById(userId, function (err, user){
-        if (err) return '';
-        return user.username;
-    });
-}
 
 exports.listAllCommentsForPost = function (req, res) {
     let postId;
@@ -24,7 +18,7 @@ exports.listAllCommentsForPost = function (req, res) {
         if (err) return handleError(err);
         let commentWithAppendedUserName = [];
         for (const comment of comments){
-            let userName = await getUsernameForComment(Comment.userId)
+            let userName = await commentHelper.getUsernameForComment(Comment.userId)
             commentWithAppendedUserName.push({
                     userName,
                     ...comment
