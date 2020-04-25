@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
     User = mongoose.model('Users');
 
 var userContoller = require('../controllers/userController');
+const { getPostSortedByScore } = require('../helpers/postHelper');
 
 
 exports.retrievePost = function (req, res) {
@@ -61,9 +62,9 @@ exports.getRecommendedPostsForUser = function (req, res) {
         dateCreated : -1
     }).exec(function (err,posts){
         if (err) console.log(err); 
-        console.log(posts);
-    });
 
+        res.json(getPostSortedByScore(posts, userTopTags));
+    });
 };
 
 exports.getTrendingPosts = function (req, res) {

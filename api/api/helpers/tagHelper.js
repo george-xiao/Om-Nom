@@ -9,7 +9,7 @@ function getTopNTags(n, tagMap){
         n = tagMap.length;
     }
     // only get the tags as an array
-    let tags = Array.from(tagMap.keys());
+    let tags = [...tagMap.keys()];
     for(let i = 0; i < n; i++){
         keys.push(tags[i]);
     }

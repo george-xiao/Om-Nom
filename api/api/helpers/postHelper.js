@@ -1,6 +1,6 @@
 // postTags is a string array of tags
 // return the score
-export function getPostScore(userTagMap, postTags){
+function getPostScore(userTagMap, postTags){
     let score = 0;
     for(const tag of postTags){
         if (userTagMap.has(tag)){
@@ -18,6 +18,7 @@ export function getPostSortedByScore(posts, userTagMap){
     for(const post of posts){
         postMapWithScore.set(post, getPostScore(userTagMap, post.tags));
     }
+    // sort
     postMapWithScore = new Map([...postMapWithScore.entries()].sort((a, b) => b[1] - a[1]));
     return [...postMapWithScore.keys()];
 }
