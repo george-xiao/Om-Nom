@@ -2,12 +2,13 @@
     display: flex;
     height: 60px;
     background-color: black;
-    margin: 0px;
-    padding: 0px;
-    text-align: center;
+    margin: auto;
+    padding-top: 8px;
+    align-content: center;
+    justify-content: space-between;
   }
 
-.navs{
+.Navs{
     position: flex;
     justify-content: space-evenly;
     font-size: 20px;
@@ -17,8 +18,23 @@
 }
 
 
-.navlink {
+.Navlink {
     margin: 10px;
     color:lightgrey;
     text-decoration: none;
+}
+
+
+.User-interaction{
+    position: flex;
+    width: 500px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.Dp-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
 }
