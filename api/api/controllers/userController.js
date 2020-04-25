@@ -72,19 +72,19 @@ exports.updateUser = function (req, res) {
   });
 };
 
-//update personalTagStrings
+//update topTagMap
 //should be called on 'liking'
 //expects tags of to be added as an array
-exports.updatePersonalTagStringsOfUser = function (req, res) {
+exports.updatetopTagMapOfUser = function (req, res) {
   User.findById(req.params.userId, function (err, user) {
     if (err) res.send(err);
 
     for (const tag of req.params.tags) {
-      if (user.personalTagStrings.has(tag)) {
-        const count = User.personalTagStrings.get(tag)
-        user.personalTagStrings.set(tag, count + 1);
+      if (user.topTagMap.has(tag)) {
+        const count = User.topTagMap.get(tag)
+        user.topTagMap.set(tag, count + 1);
       } else {
-        user.personalTagStrings.set(tag, 1);
+        user.topTagMap.set(tag, 1);
       }
     }
 
@@ -98,10 +98,10 @@ exports.getTopTagsOfUser = async function (req, res) {
   User.findById(req.params.userId, function (err, user) {
     if (err) res.send(err);
     //Sort the tags
-    user.personalTagStrings = new Map([...user.personalTagStrings.entries()].sort((a, b) => b[1] - a[1]));
+    user.topTagMap = new Map([...user.topTagMap.entries()].sort((a, b) => b[1] - a[1]));
     await user.save();
     //get top n number of tags
-    res.json(getTopNTags(req.params.numberOfTags, user.personalTagStrings.keySet()));
+    res.json(getTopNTags(req.params.numberOfTags, user.topTagMap.keySet()));
   });
 };
 
