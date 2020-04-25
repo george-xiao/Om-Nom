@@ -56,17 +56,14 @@ exports.getRecommendedPostsForUser = function (req, res) {
 
     const postPerPage = 100;
     const offset = req.params.pageNum
-    let postsToSort;
+
     Post.find().limit(postPerPage).skip(postPerPage * offset).sort({
         dateCreated : -1
     }).exec(function (err,posts){
         if (err) console.log(err); 
-        postsToSort = posts;
+        console.log(posts);
     });
-    
 
-    // get top posts
-    Post.find().sort({ _id: -1 }).limit(100)
 };
 
 exports.getTrendingPosts = function (req, res) {
