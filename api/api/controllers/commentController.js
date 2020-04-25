@@ -1,46 +1,43 @@
 'use strict';
-var cloneDeep = require('lodash.clonedeep');
+// var cloneDeep = require('lodash.clonedeep');
 
 var mongoose = require('mongoose'),
     Post = mongoose.model('Posts'),
     Comment = mongoose.model('Comments'),
     User = mongoose.model('Users');
 
-var postComments = [];
-async function processCommentIds(commentIdArray, res) {
-    for (let i = 0; i < commentIdArray.length; i++) {
-        await Comment.findById(commentIdArray[i], async function (err, comment) {
-            if (err) {
-                return handleError(err);
-            }
-            var commentUserId = comment.userId, commentBody = comment.body, commentTimestamp = comment.dateCreated;
-            await User.findById(commentUserId.toString(), async function (err, user) {
-                if (err) {
-                    return handleError(err);
-                } else {
-                    // return 0;
-                    postComments.push({username: user.username, dateCreated: commentTimestamp, body: commentBody, userId: commentUserId});
-                    res.json(postComments)
-                }
-            }).exec();
-        }).exec();
-    }
+async function getUsernameForComment(userId){
+    User.findById(userId, function (err, user){
+        if (err) return '';
+        return user.username;
+    });
 }
 
-exports.listAllComments = function (req, res) {
-    var response = [], commentID;
-    var comment_ids = [];
-    var postObj;
-    Post.findById(req.params.postId, async function (err, post) {
+exports.listAllCommentsForPost = function (req, res) {
+    let postId;
+    Post.findById(req.params.postId, function (err, post) {
         if (err) return handleError(err);
-        await processCommentIds(post.commentIds, res);
-        res.json(postComments)
+        postId = post._id;
     });
+
+    Comment.find({postId}, async function(err, comments){
+        if (err) return handleError(err);
+        let commentWithAppendedUserName = [];
+        for (const comment of comments){
+            let userName = await getUsernameForComment(Comment.userId)
+            commentWithAppendedUserName.push({
+                    userName,
+                    ...comment
+                });
+        }
+        res.json(commentWithAppendedUserName);
+    });
+
 };
 
 exports.createComment = function (req, res) {
     // comment id for new comment
-    var commentId = mongoose.Types.ObjectId();
+    let commentId = mongoose.Types.ObjectId();
     Post.findById(req.params.postId, function (err, post) {
         if (err) {
             return handleError(err);
@@ -52,7 +49,7 @@ exports.createComment = function (req, res) {
         });
     });
 
-    var newComment = new Comment(req.body);
+    let newComment = new Comment(req.body);
     newComment._id = commentId;
     newComment.save(function (err, comment) {
         if (err)
