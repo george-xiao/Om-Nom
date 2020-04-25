@@ -1,40 +1,51 @@
 'use strict';
+// var cloneDeep = require('lodash.clonedeep');
+var commentHelper = require('../helpers/commentHelper');
 
 var mongoose = require('mongoose'),
     Post = mongoose.model('Posts'),
     Comment = mongoose.model('Comments'),
     User = mongoose.model('Users');
 
-exports.listAllComments = function(req, res) {
-    var comment_ids = [];
+exports.listAllCommentsForPost = function (req, res) {
+    let postId;
     Post.findById(req.params.postId, function (err, post) {
         if (err) return handleError(err);
-        comment_ids.push(post.commentIds);
+        postId = post._id;
     });
-    
-    // Fix this
-    // for (let i = 0; i < comment_ids.length; i++) {
-    //     Comment.findById(comment_ids[i], "body userId")
-    // }
+
+    Comment.find({postId}, async function(err, comments){
+        if (err) return handleError(err);
+        let commentWithAppendedUserName = [];
+        for (const comment of comments){
+            let userName = await commentHelper.getUsernameForComment(Comment.userId)
+            commentWithAppendedUserName.push({
+                    userName,
+                    ...comment
+                });
+        }
+        res.json(commentWithAppendedUserName);
+    });
+
 };
 
-exports.createComment = function(req, res) {
+exports.createComment = function (req, res) {
     // comment id for new comment
-    var commentId = mongoose.Types.ObjectId();
+    let commentId = mongoose.Types.ObjectId();
     Post.findById(req.params.postId, function (err, post) {
         if (err) {
             return handleError(err);
         }
         post.commentIds.push(commentId);
-        post.save(function(err, post) {
+        post.save(function (err, post) {
             if (err)
                 res.send(err);
         });
     });
 
-    var newComment = new Comment(req.body);
+    let newComment = new Comment(req.body);
     newComment._id = commentId;
-    newComment.save(function(err, comment) {
+    newComment.save(function (err, comment) {
         if (err)
             res.send(err);
         res.json(comment);

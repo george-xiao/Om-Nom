@@ -4,6 +4,6 @@ module.exports = function(app) {
 
     // can make simpler routes for specific reading/updating if necessary
     app.route('/posts/:postId/comments')
-        .get(comment.listAllComments)
+        .get(comment.listAllCommentsForPost)
         .post(comment.createComment);
 };
