@@ -11,7 +11,7 @@ function getPostScore(userTagMap, postTags){
 }
 
 //returns the sorted array of posts to show to user
-export function getPostSortedByScore(posts, userTagMap){
+ function getPostSortedByScore(posts, userTagMap){
     // this map has the posts as keys 
     // and will have the score as the value
     let postMapWithScore = new Map();

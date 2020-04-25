@@ -75,8 +75,8 @@ exports.updateUser = function (req, res) {
 //update topTagMap
 //should be called on 'liking'
 //expects tags of to be added as an array
-exports.updatetopTagMapOfUser = function (req, res) {
-  User.findById(req.params.userId, function (err, user) {
+exports.updatetopTagMapOfUser = async function (req, res) {
+  User.findById(req.params.userId, async function (err, user) {
     if (err) res.send(err);
 
     for (const tag of req.params.tags) {
@@ -88,14 +88,14 @@ exports.updatetopTagMapOfUser = function (req, res) {
       }
     }
 
-    user.save();
+    await user.save();
     res.json({ message: 'sucess' });
   });
 }
 
 //takes in userID and numberOfTags to get
 exports.getTopTagsOfUser = async function (req, res) {
-  User.findById(req.params.userId, function (err, user) {
+  User.findById(req.params.userId, async function (err, user) {
     if (err) res.send(err);
     //Sort the tags
     user.topTagMap = new Map([...user.topTagMap.entries()].sort((a, b) => b[1] - a[1]));
