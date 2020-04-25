@@ -10,7 +10,7 @@ var express = require('express'),
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
 // add user + pass
-mongoose.connect('mongodb+srv://user:pass@georgetestcluster-kmuhe.gcp.mongodb.net/app-testing?retryWrites=true&w=majority');
+mongoose.connect('mongodb+srv://jake_xia:DknyIBNcsq4Iglwk@georgetestcluster-kmuhe.gcp.mongodb.net/app-testing?retryWrites=true&w=majority');
 
 mongoose.connection.on('connected', function () {
     console.log('Mongoose default connection open to thingymobober');
@@ -34,4 +34,4 @@ commentRoutes(app); //register the route
 
 app.listen(port);
 
-console.log('todo list RESTful API server started on: ' + port);
+console.log('OMNOM RESTful API server started on: ' + port);

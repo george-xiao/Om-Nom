@@ -6,7 +6,10 @@ var mongoose = require('mongoose'),
     Post = mongoose.model('Posts'),
     User = mongoose.model('Users');
 
-exports.retrievePost = function(req, res) {
+const  postHelper  = require('../helpers/postHelper');
+
+
+exports.retrievePost = function (req, res) {
     Post.findById(req.params.postId, function (err, post) {
         if (err) return handleError(err);
         console.log("yeet it worked")
@@ -14,43 +17,55 @@ exports.retrievePost = function(req, res) {
     });
 };
 
-exports.createPost = function(req, res) {
+exports.createPost = function (req, res) {
     var new_post = new Post(req.body);
     new_post.userId = mongoose.Types.ObjectId(req.params.userId);
     User.findById(req.params.userId, function (err, user) {
         user.postIds.push(new_post._id);
-        user.save(function(err, user) { 
+        user.save(function (err, user) {
             if (err) res.send(err);
         })
     })
-    new_post.save(function(err, post) {
+    new_post.save(function (err, post) {
         if (err)
             res.send(err);
         res.json(post);
     });
 };
 
-exports.getUserPosts = function(req, res) {
-    Post.find({userId: req.params.userId}, function (err, posts) {
+exports.getUserPosts = function (req, res) {
+    Post.find({ userId: req.params.userId }, function (err, posts) {
         if (err) return handleError(err);
         console.log("yeet it worked")
         res.json(posts);
     });
 };
 
-exports.getRecommendedTagsForUser = function(req, res){
-    let tags = [];
-    Post.find({userId: req.params.userId}, function (err,post){
-        if (err) return handleError(err);
-        post.tags
-    });
-}
 
-exports.getRecommendedPostsForUser = function(req, res) {
-    
+// requires user id and number of posts to get
+exports.getRecommendedPostsForUser = function (req, res) {
+    // get top user tags
+    let userTopTags;
+    User.findById(req.params.userId, function (err, user) {
+        if (err) {
+            res.send(err);
+            return
+        }
+        userTopTags = user.topTagMap;
+    });
+
+    const postPerPage = 100;
+    const offset = req.params.pageNum
+
+    Post.find().limit(postPerPage).skip(postPerPage * offset).sort({
+        dateCreated : -1
+    }).exec(function (err,posts){
+        if (err) console.log(err); 
+        res.json(postHelper.getPostSortedByScore(posts, userTopTags));
+    });
 };
 
-exports.getTrendingPosts = function(req, res) {
+exports.getTrendingPosts = function (req, res) {
     var currentDate = Date.now();
     const dayInMs = 86400000;
     var earliestDate = currentDate - dayInMs;
