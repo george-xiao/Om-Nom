@@ -2,6 +2,7 @@ import React from 'react';
 import DiscoverCards from './DiscoverCards'
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+//import DisContent from "./ForYouContent";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Modal, { closeStyle } from 'simple-react-modal'
 import CloseIcon from '@material-ui/icons/Close';
@@ -12,11 +13,7 @@ import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
-import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+
 // import DisContent from "./ForYouContent";
 import { Typography, Card } from '@material-ui/core';
 
@@ -55,19 +52,19 @@ class Discover extends React.Component {
 
     async getPostsFromApi() {
         const response = await API.get(`users/5ea4ba1cec987466a0f3ca90/posts/recommended/${this.state.page}`);
-        console.log(response.data);
+        // console.log(response.data);
         let posts = [];
         for (const post of response.data) {
             let profilePicture = await this.getUserProfilePic(post.userId);
             posts.push({ profilePicture, ...post });
         }
-        console.log(posts);
+        // console.log(posts);
         return posts;
     }
 
     async getUserProfilePic(id) {
         const response = await API.get(`users/${id}/profilePicture`);
-        console.log(response.data);
+        // console.log(response.data);
 
         return response.data;
     }
@@ -106,11 +103,6 @@ class Discover extends React.Component {
         this.setState({ show: false })
     }
 
-    handleStateChange = (id) => {
-        console.log('omg it wokr', id);
-        
-    }
-
     render() {
         const cusine = ["Japanese", "Korean", "Italian", "Indian", "Chinese", "American"];
         const tags = ["Keto", "Keto", "Keto", "Keto", "Keto", "Keto"];
@@ -119,7 +111,7 @@ class Discover extends React.Component {
         const getDiscover = discoverPost => {
             return (
                 <Grid item xs={12} sm={6} md={4} onClick={this.show.bind(this)}>
-                    <DiscoverCards handleStateChange={this.handleStateChange} {...discoverPost} />
+                    <DiscoverCards {...discoverPost} />
                 </Grid>
             );
         };
