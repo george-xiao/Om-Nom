@@ -64,7 +64,6 @@ class Discover extends React.Component {
         this.setState({
             posts: this.state.posts.concat(newPost),
         })
-
     }
 
 

@@ -24,7 +24,6 @@ const DiscoverCards = props => {
                     </CardActions>
                 </Grid>
             </Grid>
-
         </Card>
     );
 
