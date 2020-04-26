@@ -5,10 +5,10 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import Grid from '@material-ui/core/Grid';
 
 const DiscoverCards  = props => {
-    const { avatarUrl, title, imageUrl } = props;
+    const { avatarUrl, title, photoLinks } = props;
     return(
     <Card>
-      <CardMedia style={{height: "200px"}} image={imageUrl} title="Cauliflower Pizza"/>
+      <CardMedia style={{height: "200px"}} image={photoLinks[0]} title="Cauliflower Pizza"/>
         <Grid container>
             <Grid item xs={8}>
                 <CardHeader 

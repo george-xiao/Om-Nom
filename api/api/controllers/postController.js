@@ -53,7 +53,7 @@ exports.getRecipe = function (req, res) {
 };
 
 
-// requires user id and number of posts to get
+// requires user id and page of posts to get
 exports.getRecommendedPostsForUser = function (req, res) {
     // get top user tags
     let userTopTags;
@@ -63,7 +63,7 @@ exports.getRecommendedPostsForUser = function (req, res) {
             return
         }
         userTopTags = user.topTagMap;
-    });
+
 
     const postPerPage = 100;
     const offset = req.params.pageNum
@@ -74,6 +74,8 @@ exports.getRecommendedPostsForUser = function (req, res) {
         if (err) console.log(err); 
         res.json(postHelper.getPostSortedByScore(posts, userTopTags));
     });
+    });
+
 };
 
 // requires user id and number of posts to get

@@ -2,36 +2,71 @@ import React from 'react';
 import './Nav.css';
 import { NavLink } from 'react-router-dom';
 import blank from './img/blank.png'; 
+import API from "./utils/Api";
  
-const Navigation = () => {
-    return (
-        <div className="App-header">
-            <h1 className="Dm-serif" id="title">Om Nom</h1>
-            <div className="Red-hat Medium Navs">
-                <NavLink to="/foryou" className="Navlink" activeClassName="Bold">For You</NavLink>
-                <NavLink to="/discover" className="Navlink" activeClassName="Bold">Discover</NavLink>
-                <NavLink to="/profile"className="Navlink" activeClassName="Bold">Profile</NavLink>
+class Navigation extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+          value: "",
+          search: "",
+          user:{}
+        };
+
+      this.handleChange = this.handleChange.bind(this);
+      this.keyPress = this.keyPress.bind(this);
+      }
+
+    async componentDidMount(){
+    const response = await API.get('users/5ea4ba1cec987466a0f3ca90');
+    this.setState({user: response.data});
+    //console.log(response.data);
+    }
+    
+    keyPress(e){
+        if(e.keyCode == 13){
+           console.log('value', e.target.value);
+           // put the login here
+           this.setState({search: e.target.value});
+           
+        }
+     }
+
+     handleChange(e) {
+        this.setState({ value: e.target.value });
+     }
+
+    render(){
+        return (
+            <div className="App-header">
+                <h1 className="Dm-serif" id="title">Om Nom</h1>
+                <div className="Red-hat Medium Navs">
+                    <NavLink to="/foryou" className="Navlink" activeClassName="Bold">For You</NavLink>
+                    <NavLink to="/discover" className="Navlink" activeClassName="Bold">Discover</NavLink>
+                    <NavLink to="/profile"className="Navlink" activeClassName="Bold">Profile</NavLink>
+                </div>
+                <div className="User-interaction">
+                    <input
+                        value={this.state.value} 
+                        onChange={this.handleChange}
+                        onKeyDown={this.keyPress} 
+                        type="text"
+                        className="Red-hat Medium"
+                        style={{
+                            width: "10vw",
+                            margin: "10px"
+                        }}
+                        placeholder="I want to cook..."
+                        />
+                    <button style={{
+                            margin: "10px"
+                        }}>New Post</button>
+                    <img className="Dp-pic" src={this.state.user.profilePicture} alt={blank} />
+                </div>
             </div>
-            <div className="User-interaction">
-                <input
-                    type="text"
-                    className="Red-hat Medium"
-                    style={{
-                        width: "10vw",
-                        margin: "10px"
-                    }}
-                    name="search"
-                    placeholder="I want to cook... "
-                    //value={this.state.search}
-                    //onChange={this.onChange}
-                    />
-                <button style={{
-                        margin: "10px"
-                    }}>New Post</button>
-                <img className="Dp-pic" src={blank} alt="blank" />
-            </div>
-        </div>
-    );
+        );
+    };
+    
 }
  
 export default Navigation;

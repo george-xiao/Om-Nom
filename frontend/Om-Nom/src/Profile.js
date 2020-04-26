@@ -1,44 +1,12 @@
 import React from 'react';
 import DiscoverCards from './DiscoverCards'
+import ProfileCard from './ProfileCard'
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import DisContent from "./ForYouContent";
 import { Avatar, Card, CardHeader, CardContent, CardActions, CardMedia, IconButton, Typography } from "@material-ui/core";
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
-
-function User(props) {
-  return (
-    <Card>
-      <Grid container>
-        <Grid item xs={4}>
-          <CardMedia style={{height: "300px", width: "300px"}} image={props.imageUrl}/>
-        </Grid>
-        <Grid item container xs={8} direction="column" justify="flex-start" alignItems="flex-start">
-          <Grid item container xs={4} direction="row" justify="space-between">
-            <Grid item>
-            <CardHeader 
-            title={props.name}
-            subheader={props.username}/>
-            </Grid>
-            <Grid item>
-            <Typography component="p">{props.type}</Typography>
-            </Grid>
-          </Grid>
-          <Grid item xs={8}>
-          <CardContent>
-            <Typography variant="body2" color="textSecondary" component="p">{props.bio}</Typography>
-            <Grid container>
-              <LocationOnIcon/>
-              <Typography component="p">{props.loc}</Typography>
-            </Grid>
-          </CardContent>
-        </Grid>
-        </Grid>
-      </Grid>
-    </Card>
-  );
-}
+//import DisContent from "./ForYouContent";
+import API from "./utils/Api";
 
 
 class Profile extends React.Component {
@@ -46,9 +14,20 @@ class Profile extends React.Component {
       super();
       this.state = {
         loading: false,
-        user: ""
+        user: {},
+        posts: []
       };
     }
+
+    async componentDidMount() {
+      const response = await API.get(`users/5ea4ba1cec987466a0f3ca90/posts`,{});
+      const users = await API.get(`users/5ea4ba1cec987466a0f3ca90`,{});
+      console.log(users);
+      this.setState({posts: response.data,
+      user: users.data});
+      
+    }
+
 
     render(){
       const getDiscover = discoverPost => {
@@ -58,14 +37,59 @@ class Profile extends React.Component {
             </Grid>
         );
       };
+
+      const getProfile = profile=> {
+        return (
+            <Grid item xs={12}>
+                <ProfileCard {...profile}/>
+            </Grid>
+        );
+      };
+
+      var curUser = this.state.user;
+
+
       return (
         <div style={{marginTop: "30px"}}>
             <Grid container spacing={2} direction="column">
-              <Grid item spacing={4} xs={12}>
-                <User name="User Name" username="username" imageUrl="./img/blank.png" bio="this is my bio" loc="Toronto" type="chef"/>
+              <Grid item spacing={2} direction="row">
+                <Card>
+                  <Grid container spacing={2} direction="row">
+                    <Grid item xs={4}>
+                      <CardMedia style={{height: "300px", width: "300px"}} image={curUser.profilePicture}/>
+                    </Grid>
+                    <Grid item container xs={8} direction="column">
+                      <Grid item xs={2}/>
+                      <Grid item container spacing={1} direction="row" justify="space-evenly">
+                        <CardHeader 
+                          title={curUser.firstName}
+                          subheader={curUser.username}/>
+                        <Grid>
+                          <Typography component="p">460</Typography>
+                          <Typography component="p">Followers</Typography>
+                        </Grid>
+                        <Grid>
+                          <Typography component="p">307</Typography>
+                          <Typography component="p">Following</Typography>
+                        </Grid>
+                        <Typography component="p">{curUser.userType}</Typography>
+                        </Grid>
+                      <Grid item xs={2}/>
+                      <Grid item >
+                        <CardContent>
+                          <Typography variant="body2" color="textSecondary" component="p">{curUser.bio}</Typography>
+                          <Grid container>
+                            <LocationOnIcon/>
+                            <Typography component="p">Toronto</Typography>
+                          </Grid>
+                        </CardContent>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Card>
               </Grid>
               <Grid item container spacing={2}>
-                  {DisContent.map(discoverPost => getDiscover(discoverPost))}
+                  {this.state.posts.map(discoverPost => getDiscover(discoverPost))}
               </Grid>
             </Grid>
             

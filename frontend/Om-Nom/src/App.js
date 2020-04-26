@@ -8,15 +8,25 @@ import Discover from './Discover';
 import Error from './Error';
 import Navigation from './Navigation';
 
+import API from "./utils/Api";
+import Axios from 'axios';
 
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      loading: false
+      loading: false,
+      user: {},
     };
   }
+  
+  async componentDidMount(){
+    const response = await API.get('users/5ea4ba1cec987466a0f3ca90');
+    this.setState({user: response.data});
+    //console.log(response.data);
+  }
+
   render() {
     return (
       <div className="App">
@@ -24,7 +34,7 @@ class App extends React.Component {
         <div >
           <Grid direction="column">
           <Grid item>
-            <Navigation />
+            <Navigation profilePicture = {this.state.user.profilePicture}/>
           </Grid>
           <Grid item container> 
             <Grid item xs={1} sm={2}/>
