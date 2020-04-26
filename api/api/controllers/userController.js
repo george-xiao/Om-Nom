@@ -1,82 +1,86 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-  User = mongoose.model('Users'),
-  Post = mongoose.model('Posts')
+    User = mongoose.model('Users'),
+    Post = mongoose.model('Posts')
 
 const getTopNTags = require('../helpers/tagHelper');
 
-exports.createUser = function(req, res) {
-  // const userCollection = db.db().collection("users").find();
-  // var query = User.find()
-  // query.exec(function (err, docs) {console.log(docs)});
-  User.findOne({username: req.body.username}, function (err, user) {
-      if (err)  {
-          return handleError(err)
-      }
-      else if (user != null) {
-          res.json({response: "This user already exists. Please choose a different username."});
-      } else {
-          var new_user = new User(req.body);
-          new_user.save(function(err, user) {
-              if (err)
-                  res.send(err);
-              res.json(user);
-          });
-      }
-  });
+exports.createUser = function (req, res) {
+    // const userCollection = db.db().collection("users").find();
+    // var query = User.find()
+    // query.exec(function (err, docs) {console.log(docs)});
+    User.findOne({ username: req.body.username }, function (err, user) {
+        if (err) {
+            return handleError(err)
+        }
+        else if (user != null) {
+            res.json({ response: "This user already exists. Please choose a different username." });
+        } else {
+            var new_user = new User(req.body);
+            new_user.save(function (err, user) {
+                if (err)
+                    res.send(err);
+                res.json(user);
+            });
+        }
+    });
 };
 
 exports.listAllUsers = function (req, res) {
-  User.find({}, function (err, users) {
-    if (err) return handleError(err);
-    console.log("yeet it worked")
-    res.json(users);
-  });
+    User.find({}, function (err, users) {
+        if (err) return handleError(err);
+        console.log("yeet it worked")
+        res.json(users);
+    });
 };
 
 exports.getProfilePicture = function (req, res) {
-  User.findById(req.params.userId, function (err,user){
-    if (err) res.send(err);
-    res.json(user.profilePicture);
-  })
+    User.findById(req.params.userId, function (err, user) {
+        if (err) res.send(err);
+        res.json(user.profilePicture);
+    })
 };
 
 exports.getUser = function (req, res) {
-  User.findById(req.params.userId, function (err, user) {
-    if (err)
-      res.send(err);
-    res.json(user);
-  });
+    User.findById(req.params.userId, function (err, user) {
+        if (err)
+            res.send(err);
+        res.json(user);
+    });
 };
 
-exports.getLikedPosts = function(req, res) {
-  var likedPostArray = []; // post objects
-  User.findById(req.params.userId, function(err, user) {
-      if (err)
-          res.send(err);
-      else {
-          let likedPostIds = user.likedPostIds, length = likedPostIds.length;
-          for (var i = 0; i < length; i++) {
-              Post.find({_id: likedPostIds[i]}, function(err, post) {
-                  if (err)
-                      res.send(err);
-                  else {
-                      likedPostArray.push(post)
-                  }
-              })
-          }
-          res.json(likedPostArray);
-      }
-  });
+var a = [];
+var likedPostArray = []; // post objects
+
+async function likedPostHelper(length) {
+    for (var i = 0; i < length; i++) {
+        let post = await Post.findById(a[0][i]).exec();
+        likedPostArray.push(post)
+    }
+}
+
+exports.getLikedPosts = async function (req, res) {
+    likedPostArray = [];
+    var likedPostIdsArr = [];
+
+    let user = await User.findById(req.params.userId).exec();
+
+    likedPostIdsArr = user.likedPostIds;
+    let length = likedPostIdsArr.length;
+    a.push(likedPostIdsArr)
+
+    await likedPostHelper(length);
+
+    res.json(likedPostArray)
 };
 
 // should we specify what to update?
 exports.updateUser = function (req, res) {
-  User.findOneAndUpdate({ _id: req.params.userId }, req.body, { new: true }, function (err, task) {
-    if (err) res.send(err);
-    res.json(task);
-  });
+    User.findOneAndUpdate({ _id: req.params.userId }, req.body, { new: true }, function (err, task) {
+        if (err) res.send(err);
+        res.json(task);
+    });
 };
 
 //update topTagMap
@@ -104,23 +108,23 @@ exports.updateUser = function (req, res) {
 
 //takes in userID and numberOfTags to get
 exports.getTopTagsOfUser = async function (req, res) {
-  User.findById(req.params.userId, async function (err, user) {
-    if (err) res.send(err);
-    //Sort the tags
-    user.topTagMap = new Map([...user.topTagMap.entries()].sort((a, b) => b[1] - a[1]));
-    await user.save();
-    //get top n number of tags
-    res.json(getTopNTags(req.params.numberOfTags, user.topTagMap.keySet()));
-  });
+    User.findById(req.params.userId, async function (err, user) {
+        if (err) res.send(err);
+        //Sort the tags
+        user.topTagMap = new Map([...user.topTagMap.entries()].sort((a, b) => b[1] - a[1]));
+        await user.save();
+        //get top n number of tags
+        res.json(getTopNTags(req.params.numberOfTags, user.topTagMap.keySet()));
+    });
 };
 
 exports.deleteUser = async function (req, res) {
-  User.remove({
-    _id: req.params.userId
-  }, function (err, task) {
-    if (err) res.send(err);
-    res.json({ message: req.params.userId });
-  });
+    User.remove({
+        _id: req.params.userId
+    }, function (err, task) {
+        if (err) res.send(err);
+        res.json({ message: req.params.userId });
+    });
 };
 
 
