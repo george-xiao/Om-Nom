@@ -34,30 +34,27 @@ class Discover extends React.Component {
     }
 
 
-    async componentWillMount() {
+    async componentDidMount() {
         const newPost = await this.getPostsFromApi();
-        console.log('RAN',newPost);
-        await this.setState({
-            posts: this.state.posts.concat(newPost),
-        });
+        this.setState({ posts: newPost });
         console.log(this.state.posts);
     }
 
     async getPostsFromApi() {
         const response = await API.get(`users/5ea4ba1cec987466a0f3ca90/posts/recommended/${this.state.page}`);
-        // console.log(response.data);
+        console.log(response.data);
         let posts = [];
-        for(const post of response.data){
+        for (const post of response.data) {
             let profilePicture = await this.getUserProfilePic(post.userId);
-            posts.push({profilePicture, ...post});
+            posts.push({ profilePicture, ...post });
         }
-        // console.log(posts);
+        console.log(posts);
         return posts;
     }
 
-    async getUserProfilePic(id){
+    async getUserProfilePic(id) {
         const response = await API.get(`users/${id}/profilePicture`);
-        // console.log(response.data);
+        console.log(response.data);
 
         return response.data;
     }
@@ -68,11 +65,33 @@ class Discover extends React.Component {
         this.setState({
             posts: this.state.posts.concat(newPost),
         })
+    }
 
+    tagSelect = tagVal => {
+        if (!this.state.keys.includes(tagVal)) {
+            this.setState({ keys: this.state.keys.concat(tagVal) });
+            //Call BE with new keys
+        }
+    }
+
+    tagUnselect = tagVal => {
+        for (var i = 0; i < this.state.keys.length; i++) {
+            console.log(this.state.keys[i]);
+            console.log(tagVal);
+            if (this.state.keys[i] == tagVal) {
+                this.state.keys.splice(i, 1);
+                this.setState({ keys: this.state.keys });
+                //Call BE with new keys
+            }
+        }
     }
 
 
     render() {
+        const cusine = ["Japanese", "Korean", "Italian", "Indian", "Chinese", "American"];
+        const tags = ["Keto", "Keto", "Keto", "Keto", "Keto", "Keto"];
+        const exp = ["resturant", "chef", "novice", "home-cooked", "beginner"];
+
         const getDiscover = discoverPost => {
             return (
                 <Grid item xs={12} sm={6} md={4}>
@@ -81,41 +100,81 @@ class Discover extends React.Component {
             );
         };
 
+        const getTags = tagInput => {
+            return (
+                <Grid item>
+                    <Button
+                        fullWidth="true"
+                        variant="contained"
+                        onClick={() => this.tagSelect(tagInput)}>{tagInput}</Button>
+                </Grid>
+            );
+        };
+
+
+        const disTags = tagInput => {
+            return (
+                <Grid item xs="3" >
+                    <Button
+                        fullWidth="true"
+                        variant="contained"
+                        color="primary"
+                        onClick={() => this.tagUnselect(tagInput)}>{tagInput}</Button>
+                </Grid>
+            );
+        };
+
         return (
-            <div>
-                <InfiniteScroll
-                    dataLength={this.state.posts.length}
-                    next={this.fetchMoreData}
-                    hasMore={true}
-                    loader={<h4>Loading...</h4>}
-                >
-                    <Grid item container spacing={1}>
-                        {this.state.posts.map(discoverPost => getDiscover(discoverPost))}
+            <div style={{ marginTop: "30px" }}>
+                <Grid container spacing={3} >
+                    <Grid item container spacing={4} xs="3" direction="column">
+                        <Grid item container spacing={2} direction="column">
+                            <Grid item>
+                                <Typography>Cuisine</Typography>
+                            </Grid>
+                            {cusine.map(tagInput => getTags(tagInput)).slice(0, 4)}
+                        </Grid>
+                        <Grid item container spacing={2} direction="column">
+                            <Grid item>
+                                <Typography>Tags</Typography>
+                            </Grid>
+                            {tags.map(tagInput => getTags(tagInput)).slice(0, 4)}
+                        </Grid>
+                        <Grid item container spacing={2} direction="column">
+                            <Grid item>
+                                <Typography>Experience</Typography>
+                            </Grid>
+                            {exp.map(tagInput => getTags(tagInput)).slice(0, 4)}
+                        </Grid>
                     </Grid>
-                </InfiniteScroll>
+                    <Grid item container spacing={2} xs="9" direction="column">
+                        <Grid item container spacing={1}>
+                            <Typography paragraph>Tags:</Typography>
+                            {this.state.keys.map(tagInput => disTags(tagInput))}
+                        </Grid>
+                        <Grid item container spacing={1}>
+                            <InfiniteScroll
+                                dataLength={this.state.posts.length}
+                                next={this.fetchMoreData}
+                                hasMore={true}
+                                loader={<h4>Loading...</h4>}
+                            >
+                                <Grid item container spacing={1}>
+                                    {this.state.posts.map(discoverPost => getDiscover(discoverPost))}
+                                </Grid>
+                            </InfiniteScroll>
+                        </Grid>
+                    </Grid>
+                </Grid>
+
             </div>
         );
     }
 
 
-    //     tagSelect = tagVal => {
-    //         if (!this.state.keys.includes(tagVal)) {
-    //             this.setState({ keys: this.state.keys.concat(tagVal) });
-    //             //Call BE with new keys
-    //         }
-    //     }
 
-    //     tagUnselect = tagVal => {
-    //         for (var i = 0; i < this.state.keys.length; i++) {
-    //             console.log(this.state.keys[i]);
-    //             console.log(tagVal);
-    //             if (this.state.keys[i] == tagVal) {
-    //                 this.state.keys.splice(i, 1);
-    //                 this.setState({ keys: this.state.keys });
-    //                 //Call BE with new keys
-    //             }
-    //         }
-    //     }
+
+
 
 
     // render() {
@@ -133,70 +192,6 @@ class Discover extends React.Component {
     //     // };
 
 
-
-
-    //     const getTags = tagInput => {
-    //         return (
-    //             <Grid item>
-    //                 <Button
-    //                     fullWidth="true"
-    //                     variant="contained"
-    //                     onClick={() => this.tagSelect(tagInput)}>{tagInput}</Button>
-    //             </Grid>
-    //         );
-    //     };
-
-    //     const disTags = tagInput => {
-    //         return (
-    //             <Grid item xs="3" >
-    //                 <Button
-    //                     fullWidth="true"
-    //                     variant="contained"
-    //                     color="primary"
-    //                     onClick={() => this.tagUnselect(tagInput)}>{tagInput}</Button>
-    //             </Grid>
-    //         );
-    //     };
-
-
-
-
-    //     return (
-    //         <div style={{ marginTop: "30px" }}>
-    //             <Grid container spacing={3} >
-    //                 <Grid item container spacing={4} xs="3" direction="column">
-    //                     <Grid item container spacing={2} direction="column">
-    //                         <Grid item>
-    //                             <Typography>Cuisine</Typography>
-    //                         </Grid>
-    //                         {cusine.map(tagInput => getTags(tagInput)).slice(0, 4)}
-    //                     </Grid>
-    //                     <Grid item container spacing={2} direction="column">
-    //                         <Grid item>
-    //                             <Typography>Tags</Typography>
-    //                         </Grid>
-    //                         {tags.map(tagInput => getTags(tagInput)).slice(0, 4)}
-    //                     </Grid>
-    //                     <Grid item container spacing={2} direction="column">
-    //                         <Grid item>
-    //                             <Typography>Experience</Typography>
-    //                         </Grid>
-    //                         {exp.map(tagInput => getTags(tagInput)).slice(0, 4)}
-    //                     </Grid>
-    //                 </Grid>
-    //                 <Grid item container spacing={2} xs="9" direction="column">
-    //                     <Grid item container spacing={1}>
-    //                         <Typography paragraph>Tags:</Typography>
-    //                         {this.state.keys.map(tagInput => disTags(tagInput))}
-    //                     </Grid>
-    //                     <Grid item container spacing={1}>
-    //                         {this.state.posts.map(discoverPost => getDiscover(discoverPost))}
-    //                     </Grid>
-    //                 </Grid>
-    //             </Grid>
-    //         </div>
-    //     );
-    // }
 
 }
 export default Discover;
