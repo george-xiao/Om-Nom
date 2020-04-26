@@ -4,30 +4,38 @@ var commentHelper = require('../helpers/commentHelper');
 
 var mongoose = require('mongoose'),
     Post = mongoose.model('Posts'),
-    Comment = mongoose.model('Comments'),
-    User = mongoose.model('Users');
+    Comment = mongoose.model('Comments');
 
-exports.listAllCommentsForPost = function (req, res) {
-    let postId;
-    Post.findById(req.params.postId, function (err, post) {
-        if (err) return handleError(err);
-        postId = post._id;
-    });
-
-    Comment.find({postId}, async function(err, comments){
-        if (err) return handleError(err);
-        let commentWithAppendedUserName = [];
-        for (const comment of comments){
-            let userName = await commentHelper.getUsernameForComment(Comment.userId)
-            commentWithAppendedUserName.push({
-                    userName,
-                    ...comment
-                });
+exports.listAllCommentsForPost = async function (req, res) {
+    let commentIds = [];
+    try {
+        const post = await Post.findById(req.params.postId);
+        commentIds = post.commentIds
+    } catch (error) {
+        console.log(error);
+    }
+    let comments = [];
+    for (const commentId of commentIds) {
+        let comment = await Comment.findById(commentId);
+        if (comment) {
+            comments.push(comment);
         }
-        res.json(commentWithAppendedUserName);
-    });
+        // console.log(comment);
+    }
+    console.log('comments', comments);
 
-};
+    let commentWithAppendedUserName = [];
+    for (const comment of comments) {
+        let userName = await commentHelper.getUsernameForComment(comment.userId);
+        // console.log(userName)
+        commentWithAppendedUserName.push({
+            userName,
+            comment
+        });
+    }
+    res.json(commentWithAppendedUserName);
+
+}
 
 exports.createComment = function (req, res) {
     // comment id for new comment
