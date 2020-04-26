@@ -1,6 +1,6 @@
 import React from 'react';
 import './Nav.css';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Redirect } from 'react-router-dom';
 import blank from './img/blank.png'; 
 import API from "./utils/Api";
  
@@ -10,7 +10,8 @@ class Navigation extends React.Component {
         this.state = {
           value: "",
           search: "",
-          user:{}
+          user:{},
+          submitted: false
         };
 
       this.handleChange = this.handleChange.bind(this);
@@ -27,7 +28,10 @@ class Navigation extends React.Component {
         if(e.keyCode == 13){
            console.log('value', e.target.value);
            // put the login here
-           this.setState({search: e.target.value});
+           this.setState({search: e.target.value,
+            submitted: true
+        });
+           
            
         }
      }
@@ -37,6 +41,11 @@ class Navigation extends React.Component {
      }
 
     render(){
+        if (this.state.submitted) {
+            return (
+              <Redirect to="/discover" tag={this.state.search}/>
+            )
+          }
         return (
             <div className="App-header">
                 <h1 className="Dm-serif" id="title">Om Nom</h1>

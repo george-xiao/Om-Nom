@@ -11,7 +11,6 @@ class DiscoverCards extends React.Component {
             post: {}
         };
     }
-
     
     render() {
         const thisPost = this.props.post;
