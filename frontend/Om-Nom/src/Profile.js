@@ -14,7 +14,7 @@ class Profile extends React.Component {
       super();
       this.state = {
         loading: false,
-        user: {},
+        user: [],
         posts: []
       };
     }
@@ -33,7 +33,7 @@ class Profile extends React.Component {
       const getDiscover = discoverPost => {
         return (
             <Grid item xs={12} sm={6} md={4}>
-                <DiscoverCards {...discoverPost}/>
+              <DiscoverCards post={discoverPost}/>
             </Grid>
         );
       };
@@ -46,7 +46,7 @@ class Profile extends React.Component {
         );
       };
 
-      var curUser = this.state.user;
+      const curUser = this.state.user;
 
 
       return (

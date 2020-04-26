@@ -4,28 +4,38 @@ import { Avatar, Card, CardHeader, CardContent, CardActions, CardMedia, IconButt
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Grid from '@material-ui/core/Grid';
 
-const DiscoverCards  = props => {
-    const { avatarUrl, title, photoLinks } = props;
-    return(
-    <Card>
-      <CardMedia style={{height: "200px"}} image={photoLinks[0]} title="Cauliflower Pizza"/>
-        <Grid container>
-            <Grid item xs={8}>
-                <CardHeader 
-                avatar={<Avatar src={avatarUrl} />}
-                title={title}/>
-            </Grid>
-            <Grid item xs={4}>
-                <CardActions disableSpacing>
-                    <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
-                    </IconButton>
-                </CardActions>
-            </Grid>
-        </Grid>
-      
-    </Card>
-    );
+class DiscoverCards extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            post: {}
+        };
+    }
+
+    
+    render() {
+        const thisPost = this.props.post;
+        return (
+            <Card>
+                <CardMedia style={{ height: "200px" }} image={thisPost.photoLinks[0]} title="Cauliflower Pizza" />
+                <Grid container spacing={1}>
+                    <Grid item xs={8}>
+                        <CardHeader
+                            avatar={<Avatar src={thisPost.profilePicture} />}
+                            title={thisPost.title} />
+                    </Grid>
+                    <Grid item xs={4}>
+                        <CardActions disableSpacing>
+                            <IconButton aria-label="add to favorites">
+                                <FavoriteIcon />
+                            </IconButton>
+                        </CardActions>
+                    </Grid>
+                </Grid>
+            </Card>
+        );
+    }
+    
 
 }
 
