@@ -34,6 +34,8 @@ class Profile extends React.Component {
         user: users.data,
         likedPosts: liked.data
       });
+
+      console.log(this.state.posts);
       
     }
 
@@ -58,28 +60,7 @@ class Profile extends React.Component {
         );
       };
 
-      const getProfile = profile=> {
-        return (
-            <Grid item xs={12}>
-                <ProfileCard {...profile}/>
-            </Grid>
-        );
-      };
 
-      const returnPosts=props=>{
-        if (props.liked && !props.mine) {
-          return (
-            <Grid item container spacing={2}>
-              {this.state.posts.map(discoverPost => getDiscover(discoverPost))}
-            </Grid>
-        );}  else {
-          return (
-            <Grid item container spacing={2}>
-              {this.state.likedPosts.map(discoverPost => getDiscover(discoverPost))}
-            </Grid>
-          );
-        }
-      }
 
       const curUser = this.state.user;
 
