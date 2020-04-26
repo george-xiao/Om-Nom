@@ -3,6 +3,7 @@ var express = require('express'),
   port = process.env.PORT || 3001,
   mongoose = require('mongoose'),
   User = require('./api/models/userModel'), //created model loading here
+  Recipe = require('./api/models/recipeModel'),
   Post = require('./api/models/postModel'),
   Comment = require('./api/models/commentModel'),
   bodyParser = require('body-parser');
@@ -26,11 +27,13 @@ app.use(bodyParser.json());
 
 var userRoutes = require('./api/routes/userRoutes'), //importing route
     postRoutes = require('./api/routes/postRoutes'),
-    commentRoutes = require('./api/routes/commentRoutes');
+    commentRoutes = require('./api/routes/commentRoutes'),
+    recipeRoutes = require('./api/routes/recipeRoutes');
 
 userRoutes(app); //register the route
 postRoutes(app); //register the route
 commentRoutes(app); //register the route
+recipeRoutes(app); //register the route
 
 app.listen(port);
 

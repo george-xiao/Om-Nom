@@ -50,6 +50,9 @@ var PostSchema = new Schema({
         type: [String],
         default: []
     },
+    recipe: {
+        type: Schema.Types.ObjectId
+    }
 
 });
 

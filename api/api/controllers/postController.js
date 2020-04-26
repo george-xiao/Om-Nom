@@ -4,6 +4,7 @@
 
 var mongoose = require('mongoose'),
     Post = mongoose.model('Posts'),
+    Recipe = mongoose.model('Recipes'),
     User = mongoose.model('Users');
 
 const  postHelper  = require('../helpers/postHelper');
@@ -41,6 +42,16 @@ exports.getUserPosts = function (req, res) {
     });
 };
 
+exports.getRecipe = function (req, res) {
+    Post.findById(req.params.postId, async function (err, post) {
+        if (err) return handleError(err);
+
+        let query = await Recipe.findById(post.recipe).exec();
+        console.log("yeet it worked")
+        res.json(query);
+    });
+};
+
 
 // requires user id and number of posts to get
 exports.getRecommendedPostsForUser = function (req, res) {
@@ -62,6 +73,29 @@ exports.getRecommendedPostsForUser = function (req, res) {
     }).exec(function (err,posts){
         if (err) console.log(err); 
         res.json(postHelper.getPostSortedByScore(posts, userTopTags));
+    });
+};
+
+// requires user id and number of posts to get
+exports.getFollowingPosts = async function (req, res) {
+    // get top user tags
+    let peopleFollowed;
+    let userData = await User.findById(req.params.userId, function (err, user) {
+        if (err) {
+            res.send(err);
+            return
+        }
+        peopleFollowed = user.followingIds;
+    });
+
+    const postPerPage = 100;
+    const offset = req.params.pageNum
+
+    Post.find({userId: {$in: peopleFollowed}}).limit(postPerPage).skip(postPerPage * offset).sort({
+        dateCreated : -1
+    }).exec(function (err,posts){
+        if (err) console.log(err); 
+        res.json(posts);
     });
 };
 
