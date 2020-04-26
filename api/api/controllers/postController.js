@@ -7,10 +7,9 @@ var mongoose = require('mongoose'),
     Recipe = mongoose.model('Recipes'),
     User = mongoose.model('Users');
 
-const  postHelper  = require('../helpers/postHelper');
+const postHelper = require('../helpers/postHelper');
 
-
-exports.retrievePost = function (req, res) {
+exports.retrievePost = async function (req, res) {
     Post.findById(req.params.postId, function (err, post) {
         if (err) return handleError(err);
         console.log("yeet it worked")
@@ -69,9 +68,9 @@ exports.getRecommendedPostsForUser = function (req, res) {
     const offset = req.params.pageNum
 
     Post.find().limit(postPerPage).skip(postPerPage * offset).sort({
-        dateCreated : -1
-    }).exec(function (err,posts){
-        if (err) console.log(err); 
+        dateCreated: -1
+    }).exec(function (err, posts) {
+        if (err) console.log(err);
         res.json(postHelper.getPostSortedByScore(posts, userTopTags));
     });
     });
@@ -93,10 +92,10 @@ exports.getFollowingPosts = async function (req, res) {
     const postPerPage = 100;
     const offset = req.params.pageNum
 
-    Post.find({userId: {$in: peopleFollowed}}).limit(postPerPage).skip(postPerPage * offset).sort({
-        dateCreated : -1
-    }).exec(function (err,posts){
-        if (err) console.log(err); 
+    Post.find({ userId: { $in: peopleFollowed } }).limit(postPerPage).skip(postPerPage * offset).sort({
+        dateCreated: -1
+    }).exec(function (err, posts) {
+        if (err) console.log(err);
         res.json(posts);
     });
 };

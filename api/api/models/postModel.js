@@ -15,11 +15,11 @@ var PostSchema = new Schema({
     },
     dateCreated: {
         type: Date,
-        default: Date.now
+        default: new Date()
     },
     lastUpdated: {
         type: Date,
-        default: Date.now
+        default: new Date()
     },
     photoLinks: {
         type: [String],
