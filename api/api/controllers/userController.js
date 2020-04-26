@@ -84,23 +84,23 @@ exports.updateUser = function (req, res) {
 //expects tags of to be added as an array
 
 // give user id, post tag array
-exports.updatetopTagMapOfUser = async function (req, res) {
-  User.findById(req.params.userId, async function (err, user) {
-    if (err) res.send(err);
+// updatetopTagMapOfUser = async function (req, res) {
+//   User.findById(req.params.userId, async function (err, user) {
+//     if (err) res.send(err);
 
-    for (const tag of req.params.tags) {
-      if (user.topTagMap.has(tag)) {
-        const count = User.topTagMap.get(tag)
-        user.topTagMap.set(tag, count + 1);
-      } else {
-        user.topTagMap.set(tag, 1);
-      }
-    }
+//     for (const tag of req.params.tags) {
+//       if (user.topTagMap.has(tag)) {
+//         const count = User.topTagMap.get(tag)
+//         user.topTagMap.set(tag, count + 1);
+//       } else {
+//         user.topTagMap.set(tag, 1);
+//       }
+//     }
 
-    await user.save();
-    res.json({ message: 'sucess' });
-  });
-}
+//     await user.save();
+//     res.json({ message: 'sucess' });
+//   });
+// }
 
 //takes in userID and numberOfTags to get
 exports.getTopTagsOfUser = async function (req, res) {

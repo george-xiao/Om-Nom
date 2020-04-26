@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
     User = mongoose.model('Users');
 
 const postHelper = require('../helpers/postHelper');
+const likeHelper = require('../helpers/likeHelper');
 
 exports.retrievePost = async function (req, res) {
     Post.findById(req.params.postId, function (err, post) {
@@ -164,4 +165,20 @@ exports.getFilteredPosts = async function (req, res) {
     await filterHelper2();
     await filterHelper3();
     res.json(responseArray);
+};
+
+exports.updateLikes = async function (req, res) {
+    let user = await User.findById(req.body.userId).exec();
+    let post = await Post.findById(req.params.postId).exec();
+
+    let oldLikeCount = post.numLikes;
+
+    post.numLikes += 1;
+    let saveNumLikes = await post.save();
+
+    user.likedPostIds.push(req.params.postId);
+    await likeHelper.updatetopTagMapOfUser(req.body.userId, post.tags);
+    let saveUser = await user.save();
+    
+    res.json(oldLikeCount + 1);
 };
