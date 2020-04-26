@@ -3,7 +3,7 @@ import './Nav.css';
 import { NavLink } from 'react-router-dom';
 import blank from './img/blank.png'; 
  
-const Navigation = () => {
+const Navigation = (props) => {
     return (
         <div className="App-header">
             <h1 className="Dm-serif" id="title">Om Nom</h1>
@@ -28,7 +28,7 @@ const Navigation = () => {
                 <button style={{
                         margin: "10px"
                     }}>New Post</button>
-                <img className="Dp-pic" src={blank} alt="blank" />
+                <img className="Dp-pic" src={props.profilePicture} alt="blank" />
             </div>
         </div>
     );
