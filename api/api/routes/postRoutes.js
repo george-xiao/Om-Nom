@@ -6,6 +6,9 @@ module.exports = function(app) {
     app.route('/posts/:postId')
         .get(post.retrievePost);
 
+    app.route('/posts/:postId/like')
+        .put(post.updateLikes);
+
     app.route('/posts/:postId/recipe')
         .get(post.getRecipe);
 
