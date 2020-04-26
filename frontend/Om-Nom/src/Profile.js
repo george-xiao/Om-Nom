@@ -23,6 +23,8 @@ class Profile extends React.Component {
       };
     }
 
+    
+
     async componentDidMount() {
       const response = await API.get(`users/5ea4ba1cec987466a0f3ca90/posts`,{});
       const users = await API.get(`users/5ea4ba1cec987466a0f3ca90`,{});

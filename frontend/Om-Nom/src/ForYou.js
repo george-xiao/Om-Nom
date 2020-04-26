@@ -30,6 +30,8 @@ class ForYou extends React.Component {
         this.setState({posts: response.data});
     }
 
+    
+
 
     render() {
         const {

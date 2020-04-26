@@ -3,6 +3,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Avatar, Card, CardHeader, CardContent, CardActions, CardMedia, IconButton, Typography } from "@material-ui/core";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Grid from '@material-ui/core/Grid';
+import API from "./utils/Api";
+
 class DiscoverCards extends React.Component {
     constructor(props) {
         super(props);
@@ -13,7 +15,7 @@ class DiscoverCards extends React.Component {
 
     render() {
         return (
-            <div onClick={this.props.handleStateChange(this.props.title)}>
+            <div>
                 <Card>
                     <CardMedia style={{ height: "200px" }} image={this.props.photoLinks[0]} title="Cauliflower Pizza" />
                     <Grid container spacing={1}>
