@@ -5,7 +5,8 @@ import axios from 'axios'
 // Infinite scroll
 
 function loadPosts([query], pageNum){
-    /*const [loading, setLoading] = useState(true)
+    /*
+    const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const [posts, setPosts] = useState([])
     const [hasMore, setHasMore] = useState(false)

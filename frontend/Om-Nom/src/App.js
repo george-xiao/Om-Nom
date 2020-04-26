@@ -21,7 +21,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <BrowserRouter>
-        <div>
+        <div >
           <Grid direction="column">
           <Grid item>
             <Navigation />
