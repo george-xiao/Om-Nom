@@ -82,6 +82,8 @@ exports.updateUser = function (req, res) {
 //update topTagMap
 //should be called on 'liking'
 //expects tags of to be added as an array
+
+// give user id, post tag array
 exports.updatetopTagMapOfUser = async function (req, res) {
   User.findById(req.params.userId, async function (err, user) {
     if (err) res.send(err);

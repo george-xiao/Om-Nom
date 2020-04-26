@@ -18,6 +18,7 @@ module.exports = function (app) {
 
     app.route('/users/:userId/followUpdate')
         .put(user.updateFollowing);
+        
     app.route('/users/:userId/profilePicture')
         .get(user.getProfilePicture);
 };

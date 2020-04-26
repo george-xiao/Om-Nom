@@ -1,7 +1,7 @@
 'use strict';
 module.exports = function(app) {
     var post = require('../controllers/postController');
-    
+
     // Should you be retrieving one post? all posts for a user? create post dont work w a post id param
     app.route('/posts/:postId')
         .get(post.retrievePost);
@@ -21,6 +21,9 @@ module.exports = function(app) {
     app.route('/users/:userId/posts/recommended/:pageNum')
         // get recommended posts based on tags
         .get(post.getRecommendedPostsForUser);
+
+    app.route('/filter/posts')
+        .get(post.getFilteredPosts);
 
     app.route('/users/posts/trending/:pageNum')
         // get trending posts (most liked posts last 24 hours)
