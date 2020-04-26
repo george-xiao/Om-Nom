@@ -50,6 +50,11 @@ var UserSchema = new Schema({
         type: [Schema.Types.ObjectId],
         default: []
     },
+    followersIds: {
+        // User ids
+        type: [Schema.Types.ObjectId],
+        default: []
+    },
     topTagMap: {
         //Keys as names, value as number of posts liked with that tag
         type: Map,

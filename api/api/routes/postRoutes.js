@@ -1,7 +1,7 @@
 'use strict';
 module.exports = function(app) {
     var post = require('../controllers/postController');
-
+    
     // Should you be retrieving one post? all posts for a user? create post dont work w a post id param
     app.route('/posts/:postId')
         .get(post.retrievePost);

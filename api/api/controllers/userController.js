@@ -113,3 +113,36 @@ exports.deleteUser = async function (req, res) {
     res.json({ message: req.params.userId });
   });
 };
+
+
+exports.updateFollowing = async function (req, res) {
+    let currUser = await User.findById(req.params.userId).exec();
+    let otherUser = await User.findById(req.body.otherUser).exec();
+
+    if (req.body.follow == true) {
+        let id1 = new mongoose.Types.ObjectId(req.body.otherUser);
+        currUser.followingIds.push(id1.toString())
+        let newCurrUser = await currUser.save();
+
+        let id2 = new mongoose.Types.ObjectId(req.params.userId);
+        otherUser.followersIds.push(id2.toString())
+        await otherUser.save();
+
+        res.json(newCurrUser);
+    } else if (req.body.follow == false) {
+        var indexCurrUser = currUser.followingIds.indexOf(req.body.otherUser);
+        let newCurrUser;
+        if (indexCurrUser !== -1) {
+            currUser.followingIds.splice(indexCurrUser, 1);
+            newCurrUser = await currUser.save();
+        }
+        var indexOtherUser = otherUser.followersIds.indexOf(req.params.userId);
+        if (indexOtherUser !== -1) {
+            otherUser.followersIds.splice(indexOtherUser, 1);
+            await otherUser.save();
+        }
+        res.json(newCurrUser);
+    } else {
+        res.json("There seems to have been a mistake.")
+    }
+};

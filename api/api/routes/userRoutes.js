@@ -15,4 +15,7 @@ module.exports = function(app) {
 
     app.route('/users/:userId/likedposts')
         .get(user.getLikedPosts);
+
+    app.route('/users/:userId/followUpdate')
+        .put(user.updateFollowing);
 };
