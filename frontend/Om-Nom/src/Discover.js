@@ -2,7 +2,6 @@ import React from 'react';
 import DiscoverCards from './DiscoverCards'
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-
 import DisContent from "./ForYouContent";
 import { Typography } from '@material-ui/core';
 
