@@ -2,12 +2,23 @@ import React from 'react';
 import DiscoverCards from './DiscoverCards'
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import DisContent from "./ForYouContent";
 import InfiniteScroll from "react-infinite-scroll-component";
-
-
+import Modal, { closeStyle } from 'simple-react-modal'
+import CloseIcon from '@material-ui/icons/Close';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Collapse from '@material-ui/core/Collapse';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
+import { red } from '@material-ui/core/colors';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import ShareIcon from '@material-ui/icons/Share';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 // import DisContent from "./ForYouContent";
-import { Typography } from '@material-ui/core';
+import { Typography, Card } from '@material-ui/core';
 
 
 import API from "./utils/Api";
@@ -30,6 +41,8 @@ class Discover extends React.Component {
             keys: [],
             posts: [],
             page: 0,
+            show: false,
+            activePost: {},
         };
     }
 
@@ -85,7 +98,18 @@ class Discover extends React.Component {
             }
         }
     }
+    show() {
+        this.setState({ show: true })
+    }
 
+    close() {
+        this.setState({ show: false })
+    }
+
+    handleStateChange = (id) => {
+        console.log('omg it wokr', id);
+        
+    }
 
     render() {
         const cusine = ["Japanese", "Korean", "Italian", "Indian", "Chinese", "American"];
@@ -94,8 +118,8 @@ class Discover extends React.Component {
 
         const getDiscover = discoverPost => {
             return (
-                <Grid item xs={12} sm={6} md={4}>
-                    <DiscoverCards {...discoverPost} />
+                <Grid item xs={12} sm={6} md={4} onClick={this.show.bind(this)}>
+                    <DiscoverCards handleStateChange={this.handleStateChange} {...discoverPost} />
                 </Grid>
             );
         };
@@ -126,6 +150,40 @@ class Discover extends React.Component {
 
         return (
             <div style={{ marginTop: "30px" }}>
+                <Modal
+                    className="modal" //this will completely overwrite the default css completely//overwrites the default background
+                    containerStyle={{ background: 'blue' }} //changes styling on the inner content area
+                    containerClassName="test"
+                    closeOnOuterClick={true}
+                    show={this.state.show}
+                    onClose={this.close.bind(this)} transitionSpeed={1000}>
+                    <Card>
+
+                        <CardHeader
+                            action={
+                                <IconButton aria-label="close">
+                                    <CloseIcon onClick={this.close.bind(this)}/>
+                                </IconButton>
+                            }
+                            title="Shrimp and Chorizo Paella"
+                            subheader="September 14, 2016"
+                        />
+                        <CardMedia
+                            className = 'media'
+                            image="https://storage.googleapis.com/example_bucket_1_calhacks_practice/pp9.jpg"
+                            title="Paella dish"
+                        />
+                        <CardContent>
+                            <Typography variant="body2" color="textSecondary" component="p">
+                                This impressive paella is a perfect party dish and a fun meal to cook together with your
+                                guests. Add 1 cup of frozen peas along with the mussels, if you like.This impressive paella is a perfect party dish and a fun meal to cook together with your
+                                guests. Add 1 cup of frozen peas along with the mussels, if you like.This impressive paella is a perfect party dish and a fun meal to cook together with your
+                                guests. Add 1 cup of frozen peas along with the mussels, if you like.
+        </Typography>
+                        </CardContent>
+                    </Card>
+
+                </Modal>
                 <Grid container spacing={3} >
                     <Grid item container spacing={4} xs="3" direction="column">
                         <Grid item container spacing={2} direction="column">
