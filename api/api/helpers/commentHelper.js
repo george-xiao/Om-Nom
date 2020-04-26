@@ -1,7 +1,7 @@
+var mongoose = require('mongoose'),
+User = mongoose.model('Users');
 
 exports.getUsernameForComment = async function(userId){
-    User.findById(userId, function (err, user){
-        if (err) return '';
-        return user.username;
-    });
+    let user = await User.findById(userId);
+    return user.username;
 }
