@@ -3,8 +3,10 @@ import DiscoverCards from './DiscoverCards'
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 
-import DisContent from "./ForYouContent";
+// import DisContent from "./ForYouContent";
 import { Typography } from '@material-ui/core';
+
+import API from "./utils/Api";
 
 /* 
     0. If there is a search, it is checked and directed to the Discover Page
@@ -18,44 +20,59 @@ import { Typography } from '@material-ui/core';
 
 class Discover extends React.Component {
     constructor() {
-      super();
-      this.state = {
-        loading: false,
-        keys: []
-      };
+        super();
+        this.state = {
+            loading: false,
+            keys: [],
+            posts: [],
+        };
+    }
+
+    async componentDidMount() {
+        const response = await API.get(`users/5ea4ba1cec987466a0f3ca90/posts/recommended/0`,{});
+        console.log(response);
+        this.setState({posts: response.data});
     }
 
 
     tagSelect = tagVal => {
-        if (!this.state.keys.includes(tagVal)){
-            this.setState({ keys: this.state.keys.concat(tagVal)});
+        if (!this.state.keys.includes(tagVal)) {
+            this.setState({ keys: this.state.keys.concat(tagVal) });
             //Call BE with new keys
         }
     }
 
     tagUnselect = tagVal => {
-        for (var i = 0; i < this.state.keys.length; i++){
+        for (var i = 0; i < this.state.keys.length; i++) {
             console.log(this.state.keys[i]);
             console.log(tagVal);
-            if (this.state.keys[i] == tagVal){
-                this.state.keys.splice(i,1);
-                this.setState({ keys:this.state.keys });
+            if (this.state.keys[i] == tagVal) {
+                this.state.keys.splice(i, 1);
+                this.setState({ keys: this.state.keys });
                 //Call BE with new keys
             }
         }
     }
 
 
-    render(){
-        
+    render() {
+
         const cusine = ["Japanese", "Korean", "Italian", "Indian", "Chinese", "American"];
-        const tags = ["Keto", "Keto", "Keto", "Keto","Keto", "Keto"];
-        const exp = ["resturant", "chef", "novice","home-cooked", "beginner"];
+        const tags = ["Keto", "Keto", "Keto", "Keto", "Keto", "Keto"];
+        const exp = ["resturant", "chef", "novice", "home-cooked", "beginner"];
+
+        // const getDiscover = discoverPost => {
+        //     return (
+        //         <Grid item xs={12} sm={6} md={4}>
+        //             <DiscoverCards {...discoverPost} />
+        //         </Grid>
+        //     );
+        // };
 
         const getDiscover = discoverPost => {
             return (
                 <Grid item xs={12} sm={6} md={4}>
-                    <DiscoverCards {...discoverPost}/>
+                    <DiscoverCards {...discoverPost} />
                 </Grid>
             );
         };
@@ -64,9 +81,9 @@ class Discover extends React.Component {
         const getTags = tagInput => {
             return (
                 <Grid item>
-                    <Button 
-                        fullWidth="true" 
-                        variant="contained" 
+                    <Button
+                        fullWidth="true"
+                        variant="contained"
                         onClick={() => this.tagSelect(tagInput)}>{tagInput}</Button>
                 </Grid>
             );
@@ -75,9 +92,9 @@ class Discover extends React.Component {
         const disTags = tagInput => {
             return (
                 <Grid item xs="3" >
-                    <Button 
-                        fullWidth="true" 
-                        variant="contained" 
+                    <Button
+                        fullWidth="true"
+                        variant="contained"
                         color="primary"
                         onClick={() => this.tagUnselect(tagInput)}>{tagInput}</Button>
                 </Grid>
@@ -88,40 +105,40 @@ class Discover extends React.Component {
 
 
         return (
-            <div style={{marginTop: "30px"}}>
-            <Grid container spacing={3} >
-                <Grid item container spacing={4} xs="3" direction="column">
-                    <Grid item container spacing={2} direction="column">
-                        <Grid item>
-                        <Typography>Cuisine</Typography>
+            <div style={{ marginTop: "30px" }}>
+                <Grid container spacing={3} >
+                    <Grid item container spacing={4} xs="3" direction="column">
+                        <Grid item container spacing={2} direction="column">
+                            <Grid item>
+                                <Typography>Cuisine</Typography>
+                            </Grid>
+                            {cusine.map(tagInput => getTags(tagInput)).slice(0, 4)}
                         </Grid>
-                        {cusine.map(tagInput => getTags(tagInput)).slice(0,4)}
+                        <Grid item container spacing={2} direction="column">
+                            <Grid item>
+                                <Typography>Tags</Typography>
+                            </Grid>
+                            {tags.map(tagInput => getTags(tagInput)).slice(0, 4)}
+                        </Grid>
+                        <Grid item container spacing={2} direction="column">
+                            <Grid item>
+                                <Typography>Experience</Typography>
+                            </Grid>
+                            {exp.map(tagInput => getTags(tagInput)).slice(0, 4)}
+                        </Grid>
                     </Grid>
-                    <Grid item container spacing={2} direction="column">
-                        <Grid item>
-                        <Typography>Tags</Typography>
+                    <Grid item container spacing={2} xs="9" direction="column">
+                        <Grid item container spacing={1}>
+                            <Typography paragraph>Tags:</Typography>
+                            {this.state.keys.map(tagInput => disTags(tagInput))}
                         </Grid>
-                        {tags.map(tagInput => getTags(tagInput)).slice(0,4)}
-                    </Grid>
-                    <Grid item container spacing={2} direction="column">
-                        <Grid item>
-                        <Typography>Experience</Typography>
+                        <Grid item container spacing={1}>
+                            {this.state.posts.map(discoverPost => getDiscover(discoverPost))}
                         </Grid>
-                        {exp.map(tagInput => getTags(tagInput)).slice(0,4)}
                     </Grid>
                 </Grid>
-                <Grid item container spacing={2} xs="9" direction="column">
-                    <Grid item container spacing={1}>
-                        <Typography paragraph>Tags:</Typography>
-                        {this.state.keys.map(tagInput => disTags(tagInput))}
-                    </Grid>
-                    <Grid item container spacing={1}>
-                        {DisContent.map(discoverPost => getDiscover(discoverPost))}
-                    </Grid>
-                </Grid>
-            </Grid>
-        </div>
-         );
+            </div>
+        );
     }
 
 }

@@ -22,7 +22,11 @@ mongoose.connection.on('connected', function () {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 
 var userRoutes = require('./api/routes/userRoutes'), //importing route
     postRoutes = require('./api/routes/postRoutes'),
