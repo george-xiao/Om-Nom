@@ -8,9 +8,10 @@ module.exports = function(app) {
         .get(recipe.getRecipe);
 
     app.route('/posts/:postId/recipes')
+        .get(recipe.getPostRecipe)
         .post(recipe.createRecipe);
 
-    app.route('/users/:userId/posts')
+    app.route('/users/:userId/recipes')
         // get posts for user id
         .get(recipe.getRecipesOfUser);
 };

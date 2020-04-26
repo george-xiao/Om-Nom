@@ -2,7 +2,8 @@
 
 var mongoose = require('mongoose'),
     Post = mongoose.model('Posts'),
-    Recipe = mongoose.model('Recipes');
+    Recipe = mongoose.model('Recipes'),
+    User = mongoose.model('Users');
 
 exports.createRecipe = async function (req, res) {
 
@@ -10,7 +11,11 @@ exports.createRecipe = async function (req, res) {
     let query = await Post.findById(postId).exec();
     var new_recipe = new Recipe(req.body);
     query.recipe = new_recipe._id;
-    
+    let querySave = await query.save(function (err, recipe) {
+        if (err)
+            res.send(err);
+    });
+
     new_recipe.save(function (err, recipe) {
         if (err)
             res.send(err);
@@ -26,10 +31,22 @@ exports.getRecipe = function (req, res) {
     });
 };
 
-exports.getRecipesOfUser = function (req, res) {
-    Recipe.findOne({ userId: req.params.userId, }, function (err, recipe) {
-        if (err)
-            res.send(err);
-        res.json(recipe.userId);
-    });
+exports.getPostRecipe = async function (req, res) {
+    let post = await Post.findById(req.params.postId).exec();
+    let recipe = await Recipe.findById(post.recipe).exec();
+    res.json(recipe);
+}
+
+exports.getRecipesOfUser = async function (req, res) {
+    
+    let user = await User.findById(req.params.userId).exec();
+    let recipeIds = await Post.find({'_id': { $in: user.postIds}}).select('recipe').exec();
+    let recipeIdArr = [];
+    for (const recipe of recipeIds) {
+        if (recipe.recipe) {
+            recipeIdArr.push(recipe.recipe)
+        }
+    }
+    let recipes = await Recipe.find({'_id': { $in: recipeIdArr}}).exec();
+    res.json(recipes);
 }
