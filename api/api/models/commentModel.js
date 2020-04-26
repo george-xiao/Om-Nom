@@ -8,10 +8,10 @@ var CommentSchema = new Schema({
         type: Schema.Types.ObjectId,
         required: "Please include the user this comment is assigned to"
     },
-    postId:{
-        type: Schema.Types.ObjectId,
-        required: "comments need to have a post associated"
-    },
+    // postId:{
+    //     type: Schema.Types.ObjectId,
+    //     required: "comments need to have a post associated"
+    // },
     body: {
         type: String,
         required: "Please add a body"
