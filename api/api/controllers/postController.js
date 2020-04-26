@@ -54,7 +54,7 @@ exports.getRecommendedPostsForUser = function (req, res) {
         userTopTags = user.topTagMap;
 
 
-    const postPerPage = 100;
+    const postPerPage = 10;
     const offset = req.params.pageNum
 
     Post.find().limit(postPerPage).skip(postPerPage * offset).sort({

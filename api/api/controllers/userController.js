@@ -35,6 +35,13 @@ exports.listAllUsers = function (req, res) {
   });
 };
 
+exports.getProfilePicture = function (req, res) {
+  User.findById(req.params.userId, function (err,user){
+    if (err) res.send(err);
+    res.json(user.profilePicture);
+  })
+};
+
 exports.getUser = function (req, res) {
   User.findById(req.params.userId, function (err, user) {
     if (err)
