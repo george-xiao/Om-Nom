@@ -18,4 +18,5 @@ module.exports = function(app) {
 
     app.route('/users/:userId/followUpdate')
         .put(user.updateFollowing);
+
 };

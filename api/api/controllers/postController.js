@@ -11,8 +11,8 @@ const postHelper = require('../helpers/postHelper');
 
 exports.retrievePost = async function (req, res) {
     Post.findById(req.params.postId, function (err, post) {
-        if (err) return handleError(err);
-        console.log("yeet it worked")
+        // if (err) return handleError(err);
+        console.log("1")
         res.json(post);
     });
 };
@@ -36,7 +36,7 @@ exports.createPost = function (req, res) {
 exports.getUserPosts = function (req, res) {
     Post.find({ userId: req.params.userId }, function (err, posts) {
         if (err) return handleError(err);
-        console.log("yeet it worked")
+        console.log("2")
         res.json(posts);
     });
 };
@@ -46,7 +46,7 @@ exports.getRecipe = function (req, res) {
         if (err) return handleError(err);
 
         let query = await Recipe.findById(post.recipe).exec();
-        console.log("yeet it worked")
+        console.log("3")
         res.json(query);
     });
 };
@@ -110,4 +110,56 @@ exports.getTrendingPosts = function (req, res) {
         if (err) return console.log(err);
         res.json(posts)
     });
+};
+
+
+let idArray = [];
+let responseArray = [];
+let resultsArray = [];
+
+async function filterHelper(req) {
+    idArray = [];
+    responseArray = [];
+    let cuisines = req.body.cuisines;
+    let tags = req.body.tags;
+
+
+    for (let i=0; i<cuisines.length; i++) {
+        let posts =  await Post.find({ cuisine: cuisines[i] }).exec();
+        for (const post of posts) {
+            idArray.push(post._id.toString());
+        }
+    }
+
+    for (let i=0; i<tags.length; i++) {
+        let posts =  await Post.find({ tags: tags[i] }).exec();
+        for (const post of posts) {
+            idArray.push(post._id.toString());
+        }
+    }
+}
+
+async function filterHelper2() {
+    resultsArray = [];
+    for (const post of idArray) {
+        let postResult = await Post.findById(post).exec();
+        resultsArray.push(postResult._id.toString());
+    }
+}
+
+let tmpSet;
+async function filterHelper3() {
+    let uniqueIds = [...new Set(resultsArray)];
+    for (const uniqueId of uniqueIds) {
+        let postObj = await Post.findById(uniqueId).exec();
+        responseArray.push(postObj);
+    }
+}
+
+
+exports.getFilteredPosts = async function (req, res) {
+    await filterHelper(req);
+    await filterHelper2();
+    await filterHelper3();
+    res.json(responseArray);
 };
