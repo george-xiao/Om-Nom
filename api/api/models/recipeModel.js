@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 
-var UserSchema = new Schema({
+var RecipeSchema = new Schema({
     userId: {
         type: Schema.Types.ObjectId,
         required: "Please include the user who made this",
@@ -42,4 +42,4 @@ var UserSchema = new Schema({
 });
 
 
-module.exports = mongoose.model('Recipe', UserSchema);
+module.exports = mongoose.model('Recipes', RecipeSchema);
