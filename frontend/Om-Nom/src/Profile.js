@@ -15,25 +15,45 @@ class Profile extends React.Component {
       this.state = {
         loading: false,
         user: [],
-        posts: []
+        posts: [],
+        likedPosts: [],
+        myPosts: [],
+        likes: false,
+        mine: true
       };
     }
 
     async componentDidMount() {
       const response = await API.get(`users/5ea4ba1cec987466a0f3ca90/posts`,{});
       const users = await API.get(`users/5ea4ba1cec987466a0f3ca90`,{});
+      const liked = await API.get(`users/5ea4ba1cec987466a0f3ca90/like`,{});
       console.log(users);
-      this.setState({posts: response.data,
-      user: users.data});
+      this.setState({
+        posts: response.data,
+        myPosts: response.data,
+        user: users.data,
+        likedPosts: liked.data
+      });
       
     }
+
+    changeToPost=()=>{
+      this.setState({ likes: false, mine: true, posts: this.state.myPosts});
+    }
+
+    changeToLike=()=>{
+      this.setState({ likes: true, mine: false, posts: this.state.likedPosts});
+    }
+
+
+
 
 
     render(){
       const getDiscover = discoverPost => {
         return (
             <Grid item xs={12} sm={6} md={4}>
-              <DiscoverCards post={discoverPost}/>
+              <DiscoverCards {...discoverPost}/>
             </Grid>
         );
       };
@@ -45,6 +65,21 @@ class Profile extends React.Component {
             </Grid>
         );
       };
+
+      const returnPosts=props=>{
+        if (props.liked && !props.mine) {
+          return (
+            <Grid item container spacing={2}>
+              {this.state.posts.map(discoverPost => getDiscover(discoverPost))}
+            </Grid>
+        );}  else {
+          return (
+            <Grid item container spacing={2}>
+              {this.state.likedPosts.map(discoverPost => getDiscover(discoverPost))}
+            </Grid>
+          );
+        }
+      }
 
       const curUser = this.state.user;
 
@@ -83,13 +118,17 @@ class Profile extends React.Component {
                             <Typography component="p">Toronto</Typography>
                           </Grid>
                         </CardContent>
+                        <Button variant="contained" 
+                                onClick={() => this.changeToPost()}>My Posts</Button>
+                        <Button variant="contained"
+                                onClick={() => this.changeToLike()}>My Likes</Button>
                       </Grid>
                     </Grid>
                   </Grid>
                 </Card>
               </Grid>
               <Grid item container spacing={2}>
-                  {this.state.posts.map(discoverPost => getDiscover(discoverPost))}
+                {this.state.posts.map(discoverPost => getDiscover(discoverPost))}
               </Grid>
             </Grid>
             

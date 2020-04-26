@@ -13,12 +13,12 @@ module.exports = function (app) {
         .put(user.updateUser)
         .delete(user.deleteUser);
 
-    app.route('/users/:userId/likedposts')
+    app.route('/users/:userId/like')
         .get(user.getLikedPosts);
 
     app.route('/users/:userId/followUpdate')
         .put(user.updateFollowing);
-        
+
     app.route('/users/:userId/profilePicture')
         .get(user.getProfilePicture);
 };

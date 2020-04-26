@@ -20,13 +20,11 @@ class App extends React.Component {
       user: {},
     };
   }
-  
   async componentDidMount(){
     const response = await API.get('users/5ea4ba1cec987466a0f3ca90');
     this.setState({user: response.data});
-    //console.log(response.data);
+    console.log(response.data);
   }
-
   render() {
     return (
       <div className="App">

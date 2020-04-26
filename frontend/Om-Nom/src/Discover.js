@@ -2,6 +2,7 @@ import React from 'react';
 import DiscoverCards from './DiscoverCards'
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+//import DisContent from "./ForYouContent";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 
@@ -33,12 +34,9 @@ class Discover extends React.Component {
     }
 
 
-    async componentWillMount() {
+    async componentDidMount() {
         const newPost = await this.getPostsFromApi();
-        console.log('RAN',newPost);
-        await this.setState({
-            posts: this.state.posts.concat(newPost),
-        });
+        this.setState({ posts: newPost });
         console.log(this.state.posts);
     }
 
@@ -97,7 +95,7 @@ class Discover extends React.Component {
         const getDiscover = discoverPost => {
             return (
                 <Grid item xs={12} sm={6} md={4}>
-                    <DiscoverCards post={discoverPost} />
+                    <DiscoverCards {...discoverPost} />
                 </Grid>
             );
         };
