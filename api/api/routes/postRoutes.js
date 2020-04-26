@@ -15,9 +15,9 @@ module.exports = function(app) {
         // create post for user id
         .post(post.createPost);
 
-    app.route('/users/:userId/foryou')
+    app.route('/users/:userId/foryou/:pageNum')
         .get(post.getFollowingPosts);
-        
+
     app.route('/users/:userId/posts/recommended/:pageNum')
         // get recommended posts based on tags
         .get(post.getRecommendedPostsForUser);
