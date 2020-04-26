@@ -33,27 +33,30 @@ class Discover extends React.Component {
     }
 
 
-    async componentDidMount() {
+    async componentWillMount() {
         const newPost = await this.getPostsFromApi();
-        this.setState({ posts: newPost });
+        console.log('RAN',newPost);
+        await this.setState({
+            posts: this.state.posts.concat(newPost),
+        });
         console.log(this.state.posts);
     }
 
     async getPostsFromApi() {
         const response = await API.get(`users/5ea4ba1cec987466a0f3ca90/posts/recommended/${this.state.page}`);
-        console.log(response.data);
+        // console.log(response.data);
         let posts = [];
         for (const post of response.data) {
             let profilePicture = await this.getUserProfilePic(post.userId);
             posts.push({ profilePicture, ...post });
         }
-        console.log(posts);
+        // console.log(posts);
         return posts;
     }
 
     async getUserProfilePic(id) {
         const response = await API.get(`users/${id}/profilePicture`);
-        console.log(response.data);
+        // console.log(response.data);
 
         return response.data;
     }

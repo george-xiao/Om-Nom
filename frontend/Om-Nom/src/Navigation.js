@@ -43,8 +43,9 @@ class Navigation extends React.Component {
     render(){
         if (this.state.submitted) {
             return (
+
               <Redirect to="/discover" tag={this.state.search}/>
-            )
+            );
           }
         return (
             <div className="App-header">
@@ -74,7 +75,7 @@ class Navigation extends React.Component {
                 </div>
             </div>
         );
-    };
+    }
     
 }
  

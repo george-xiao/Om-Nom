@@ -1,5 +1,5 @@
 'use strict';
-module.exports = function(app) {
+module.exports = function (app) {
     var user = require('../controllers/userController');
 
     // can make simpler routes for specific reading/updating if necessary
@@ -18,4 +18,6 @@ module.exports = function(app) {
 
     app.route('/users/:userId/followUpdate')
         .put(user.updateFollowing);
+    app.route('/users/:userId/profilePicture')
+        .get(user.getProfilePicture);
 };

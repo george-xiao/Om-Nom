@@ -5,23 +5,24 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import Grid from '@material-ui/core/Grid';
 
 class DiscoverCards extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            post: {}
+            // post: {}
         };
+    //  const { profilePicture, title, photoLinks } = props;
     }
+
     
     render() {
-        const thisPost = this.props.post;
         return (
             <Card>
-                <CardMedia style={{ height: "200px" }} image={thisPost.photoLinks[0]} title="Cauliflower Pizza" />
+                <CardMedia style={{ height: "200px" }} image={this.props.photoLinks[0]} title="Cauliflower Pizza" />
                 <Grid container spacing={1}>
                     <Grid item xs={8}>
                         <CardHeader
-                            avatar={<Avatar src={thisPost.profilePicture} />}
-                            title={thisPost.title} />
+                            avatar={<Avatar src={this.props.profilePicture} />}
+                            title={this.props.title} />
                     </Grid>
                     <Grid item xs={4}>
                         <CardActions disableSpacing>
